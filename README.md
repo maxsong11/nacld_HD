@@ -84,6 +84,14 @@ the interface and the API.
 
 Check the TODO file for more information about things to be done.
 
+
+To build html or Javascript using Crisper
+------------------------------------------------------
+
+How to install gulp crisper - https://www.npmjs.com/package/gulp-crisper
+How to use vulcanize with crisper - https://github.com/PolymerLabs/crisper
+
+
 API usage
 ---------
 
@@ -167,3 +175,4 @@ The APIs for the player are quite simple: `nms.startPlayer()` and
 `nms.stopPlayer()`. Both return promises that will resolve when the
 player is finally stopped or started. They still need work, for instance
 to allow specifying the IP and port which the content come from.
+

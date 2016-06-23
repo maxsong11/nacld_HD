@@ -1,0 +1,237 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Polymer Starter Kit">
+  <title>MultiCast Stream App</title>
+  <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <!-- endbuild -->
+
+  <!-- Because this project uses vulcanize this should be your only html import
+       in this file. All other imports should go in elements.html -->
+  <link rel="import" href="elements/elements.html">
+  <!-- For shared styles, shared-styles.html import in elements.html -->
+	<style>
+	#a1{
+	height:1000px;
+	}
+	#broadcastbuttons{
+	text-align:center;
+	padding-top: 200px;
+	}
+	  html,body {
+	    height: 100%;
+	    margin: 0;
+	    background-color: #E5E5E5;
+	    font-family: Arial, sans-serif;
+	  }
+	  core-header-panel {
+	    height: 100%;
+	    overflow: auto;
+	    -webkit-overflow-scrolling: touch; 
+	  }
+	  core-toolbar {
+	    background-color: #03a9f4;
+	    color: white;
+	  }
+	  #tabs {
+	    width: 100%;
+	    margin: 0;
+	    -webkit-user-select: none;
+	    -moz-user-select: none;
+	    -ms-user-select: none;
+	    user-select: none;
+	  }
+	  .container {
+	    width: 80%;
+	    margin: 50px auto;
+	  }
+	  @media (min-width: 481px) {
+	    #tabs {
+	      width: 200px;
+	    }
+	    .container {
+	      width: 400px;
+	    }
+	  }
+	.teacher{
+		display:none;
+	}
+	#streamTitleInput{
+		display: none;
+	}
+	#bitrateConfig{
+		padding-left: 80px;
+	}
+	#setting{
+		position: fixed;
+    left: 97%;
+    top: 20px;
+	}
+	#red-toolbar{
+		background-color: #f44336;
+	}
+	
+
+	  </style>
+	
+	<style is="custom-style">
+	  paper-button.custom {
+	    --paper-button-ink-color: var(--paper-pink-a200);
+	    /* These could also be individually defined for each of the
+	      specific css classes, but we'll just do it once as an example */
+	    --paper-button-flat-keyboard-focus: {
+	      background-color: var(--paper-pink-a200);
+	      color: white !important;
+	    };
+	    --paper-button-raised-keyboard-focus: {
+	      background-color: var(--paper-pink-a200) !important;
+	      color: white !important;
+	    };
+	  }
+	  paper-button.custom:hover {
+	    background-color: var(--paper-red-100);
+	  }
+	  paper-button.pink {
+	    color: var(--paper-pink-a200);
+
+	  }
+	  paper-button.indigo {
+	    background-color: var(--paper-red-500);
+	    color: white;
+	    --paper-button-raised-keyboard-focus: {
+	      background-color: var(--paper-pink-a200) !important;
+	      color: white !important;
+	    };
+	  }
+	  paper-button.green {
+	    background-color: var(--paper-red-500);
+	    color: white;
+	  }
+	  paper-button.green[active] {
+	    background-color: var(--paper-red-500);
+	  }
+	  paper-button.disabled {
+	    color: white;
+	  }
+	</style>
+	
+</head>
+<body unresolved touch-action="auto" data-width="1" data-height="1" data-name="manycast" data-tools="pnacl newlib glibc clang-newlib linux" data-configs="Debug Release" data-path="nacl/{tc}/{config}">
+
+  <paper-header-panel>
+    <paper-toolbar id = "red-toolbar">
+	<div class="left left-container">
+      <div class="app-name"><h1>ScreenSharify</h1></div>
+    </div>
+		<paper-tabs id="tabs" selected="0" valueattr="name" self-end>
+	        <paper-tab id="two">ViewBroadCast</paper-tab>
+	        <paper-tab id="one">BroadCast</paper-tab>
+	    </paper-tabs>
+	  <!-- -->
+	  <div id='bitrateConfig'>
+	  <label for="bitrate">Bitrate:</label>
+	  <input type="range" min="200" max="1000" step="100" name="bitrate" id="bitrate" value="200">
+	  <label for="bitrate" id="bitratevalue">200 kbps</label>
+	  <br>
+	  <label for="fps">FPS:</label>
+	  <input type="range" min="1" max="30" step="1" name="fps" id="fps" value="30">
+	  <label for="fps" id="fpsvalue">30</label>
+	  </div>
+	  <img id="setting" src="small_icon.png" alt="setting"/>
+	  <!-- -->
+    </paper-toolbar>
+    <section id="teacher" class="teacher">
+		<paper-material elevation="1" id="a1">
+		  	<!-- Application status -->	
+			<label id='statuscode'>Status: <code id="statusField">NO-STATUS</label><br>
+	  <div id="ip_block">
+	   <paper-input label="Reciever IP:" type="text" name="IP" id="ipinput"
+	                    pattern="\d?\d?\d\.\d?\d?\d\.\d?\d?\d\.\d?\d?\d"
+	                    value="239.255.42.99" title="Valid IP"></paper-input>
+		<paper-input label="Port:" id="port" type="number" value=5000></paper-input>
+	  <paper-checkbox label="localhost" for="localhost" id="localhost" type="checkbox" name="localhost">Localhost</paper-checkbox><br>
+	  </div>
+
+	  <div id='broadcastbuttons'>
+	  <paper-button raised class="custom indigo" id="startSharing">Share Desktop</paper-button>
+	  <paper-button raised class="custom indigo" id="startCamSharing">Share camera</paper-button>
+	  <paper-button raised class="custom indigo" id="stopSharing">Stop Sharing</paper-button>
+	  <paper-input label="Your Name:" id="sn" type="text"></paper-input>
+	  <paper-input label="Stream Title:" id="streamTitleInput" type="text"></paper-input>
+	  <paper-input label="Please enter a passcode:" id="b1" type="text"></paper-input>
+	  <paper-button raised class="custom indigo" id="setPasscode">Confirm</paper-button>
+	  <br><br>
+	  </div>
+	  
+	  <!-- The NaCl plugin will be embedded inside the element with id "listener".
+	      See common.js.-->
+	 
+		</paper-material>
+    </section>
+	
+    
+	<paper-material elevation="1" id='lll'>
+	<section id="student" class="student">
+		<!--<material id="paper-studentm" elevation="1">
+		  <paper-button raised class="custom indigo" id="playStream">Play stream</paper-button>
+	 not working in polymer>
+			<paper-button raised class="custom indigo" id='detachlog'>Detach log</paper-button>
+		</paper-material>-->
+		<section id="streamList">
+		</section>
+
+		<paper-input label="Stream Code:" id="passcodeInput" type="text"></paper-input>
+		<paper-button raised class="custom indigo" id="playStream">Play Stream</paper-button>
+		<paper-button raised class="custom indigo" id="full">Fullscreen</paper-button>
+
+		
+
+    </section>
+    <br><br>
+	<div id="listener">
+	</div>
+	
+	<!-- Bitrate config -->
+	 <!-- pre id="log" style="font-weight: bold"></pre>
+	   -->
+	 <!--  <div id='bitrateConfig'>
+	  <label for="bitrate">Bitrate:</label>
+	  <input type="range" min="200" max="1000" step="100" name="bitrate" id="bitrate" value="1000">
+	  <label for="bitrate" id="bitratevalue">200 kbps</label>
+	  <br>
+
+	  <label for="fps">FPS:</label>
+	  <input type="range" min="1" max="30" step="1" name="fps" id="fps" value="30">
+	  <label for="fps" id="fpsvalue">30</label>
+	  <br>
+	  </div> -->
+
+
+		</paper-material>
+	
+  </paper-header-panel>
+ <script type="text/javascript" src="js/lib/es6-promise.min.js"></script>
+ <script type="text/javascript" src="js/common.js"></script>
+ <script type="text/javascript" src="js/nms.js"></script>
+ <script type="text/javascript" src="js/main.js"></script>
+</body>
+
+</html>
+
+  
+ 
